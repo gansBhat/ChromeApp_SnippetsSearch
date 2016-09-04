@@ -13,6 +13,7 @@ This project uses
 1. The database storage code provided by Matt West <matt.west@kojilabs.com>. 
 2. Twitter Bootstrap for UI
 
+--------------------------------------------------------------------------------------------------------------------------------------
 
 This is free and unencumbered software released into the public domain.
 
