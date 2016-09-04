@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Snippet Saver</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="bootstrap.min.js"></script>
+	<script src="db.js"></script>
+	
+	<script src="myapp.js"></script>
+	<style>
+	html, body {
+		overflow-y: visible;
+	}
+
+	.label-success {
+			background-color: #5cb85c;
+			font-style : normal;
+		 }
+	
+	.cust-headline {
+		  padding: 0px 0px 0px 0px;
+		  margin-top: 18px;
+		  color:#CC0000;
+		  font-size:16px;
+		  font-family: Georgia, Serif;
+		  font-weight: bold;
+	}
+	
+	pre {
+	  display:block;
+	  font:normal 13px/22px Monaco,Monospace !important;
+	  color:#14171A;
+	  background-color:#FFFFFF;
+	  background-image:-webkit-repeating-linear-gradient(top, #CCE6FF 0px, #CCE6FF 22px, #FFFFFF 22px, #FFFFFF 44px);
+	  background-image:repeating-linear-gradient(top, #CCE6FF 0px, #CCE6FF 22px, #FFFFFF 22px, #FFFFFF 44px);
+	  padding:0em 1em;
+	  overflow:auto;
+	  -webkit-user-select: text;
+	}
+	
+	textarea {
+	  font:normal 15px/22px Monaco,Monospace !important;
+	  color:#14171A;
+	  background-color:#FFFFFF;
+	  padding:0em 1em;
+	  overflow:auto;
+	  -webkit-user-select: text;
+	}
+	
+	.btn-xlarge {
+		padding: 18px 28px;
+		font-size: 18px;
+		line-height: normal;
+		-webkit-border-radius: 20px;
+		-moz-border-radius: 20px;
+            border-radius: 20px;
+    }
+	
+	
+	
+	#allSnippets {
+		float: left;
+		width: 100%;
+		height:100%;
+		padding-right: 30%;
+		padding-left: 5px;
+		overflow-y: auto;
+		
+	}
+	#newSnippet {
+		position:absolute;
+		width:30%;
+		height:100%;
+		right:0;
+		top:0;
+		padding-left: 5px;
+		padding-top: 60px;
+		padding-right: 5px;
+		overflow-y: none;
+		
+	}
+	
+	.modal-header {
+		padding:9px 15px;
+		border-bottom:1px solid #2F2F2F;
+		background-color: #ffda3d;
+		-webkit-border-top-left-radius: 5px;
+		-webkit-border-top-right-radius: 5px;
+		-moz-border-radius-topleft: 5px;
+		-moz-border-radius-topright: 5px;
+		 border-top-left-radius: 5px;
+		 border-top-right-radius: 5px;
+	}
+
+	.modal-body {
+		  background-color: #FBF084;
+	}
+		
+		
+	#tagsList {
+		margin-right: 20px;
+		margin-left: 5px;
+	}
+
+	</style>
+	
+  </head>
+  <body>
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Snips</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <div class="navbar-form navbar-left" role="search">
+		<button type="button" class="btn btn-warning" id="showFavoritesBtn">
+			<span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+		</button>
+		
+		<div class="btn-group" data-toggle="buttons" id="sortTitle">
+		  <label class="btn btn-primary">
+			<input type="radio" name="filterTag" value="AtoZ"/>A-Z
+		</label>
+		  <label class="btn btn-primary">
+			<input type="radio" name="filterTag" value="ZtoA"/> Z-A
+		  </label>
+		  <label class="btn btn-primary">
+			<input type="radio" name="filterTag" value="Asc"/> Asc
+		  </label>
+		  <label class="btn btn-primary">
+			<input type="radio" name="filterTag" value="Dsc" /> Dsc
+		  </label>
+		</div>
+		
+       <div class="input-group">
+		  <input type="text" class="form-control" placeholder="Search for..." style="width:500px;" id="serarchSnippetField">
+		  <span class="input-group-btn">
+			<button class="btn btn-success" type="button" id="searchGoBtn">Go!</button>
+		  </span>
+		</div><!-- /input-group -->
+		<div class="btn-group" data-toggle="buttons" id="filterBtns">
+			<label class="btn btn-default">
+				<input name="filter" value="all" type="radio" class="active">ALL
+			</label>
+			<label class="btn btn-default">
+				<input name="filter" value="title" type="radio">Title
+			</label>
+			<label class="btn btn-default">
+				<input name="filter" value="tags"  type="radio">Tags
+			</label>
+			<label class="btn btn-default">
+				<input name="filter" value="content" type="radio">Content
+			</label>
+        </div>
+		
+      </div>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">More Actions<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+			<li><a href="#" id="exportAllJsonBtn">JSON Export All</a></li>
+			<li><a href="#" id="exportAllClearTextBtn">Export All Clear Text</a></li>
+			<li role="separator" class="divider"></li>
+			<li><a href="#">Exit</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+<br/><br/><br/>
+
+<div id="containerA">
+		
+	<div class="leftPane" id="allSnippets">
+		<div id="tagsList" class="tag-list"></div>
+		
+		<div id="appMessages"> </div>
+		
+		<br/>
+		<div  id="snippetLists">
+			
+		</div>
+	</div>
+
+	<div id="newSnippet">
+		<div class="panel panel-default ">
+	  <div class="panel-heading">
+		<h3 class="panel-title">New Snippet</h3>
+	  </div>
+	  <div class="panel-body">
+		<div class="form-group">
+		  <input type="checkbox" id="isFavoriteChkbox">
+		  <label for="favorite">Favorite?</label>
+		</div>
+		
+		<div class="form-group">
+		  <label for="snippetTitle">Title:</label>
+		  <input type="text" class="form-control" id="snippetTitle">
+		</div>
+		<div class="form-group">
+		  <label for="tags">Tags:</label>
+		  <input type="text" class="form-control" id="snippetTags">
+		</div>
+		<div class="form-group">
+			<label for="snippet">Content:</label>
+			<textarea class="form-control" rows="8" id="snippetContent"></textarea>
+		</div>
+	  </div>
+	  <div class="panel-footer">
+		<button type="submit" class="btn btn-danger" id="cancelSnippetCreateBtn">Cancel</button>
+		<button type="submit" class="btn btn-success" id="createSnippetBtn">Create</button>
+		<button type="submit" class="btn btn-warning" id="updateSnippetBtn">Update</button>
+	  </div>
+	</div>
+	
+	</div>
+</div>
+
+<div id="popOutModal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Scratch Pad</h4>
+      </div>
+      <div class="modal-body">
+        <textarea class="form-control" rows="15" id="modelContent"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+  </body>
+</html>

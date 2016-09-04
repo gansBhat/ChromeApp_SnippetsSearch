@@ -1,0 +1,15 @@
+{
+  "name": "Snippets Quick Search",
+  "description": "Search is heart of Snippets.Quickly save and search, all data stored Offline(locally), private and safe.Store commands,code or notes",
+  "version": "2.0",
+  "manifest_version": 2,
+  "app": {
+    "background": {
+      "scripts": ["jquery.min.js","bootstrap.min.js","db.js","myapp.js","background.js"]
+    }
+  },
+  "permissions": [
+          "storage", "unlimitedStorage"
+        ],
+  "icons": { "16": "calculator-16.png", "128": "calculator-128.png" }
+}
